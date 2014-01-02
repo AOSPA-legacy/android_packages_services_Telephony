@@ -24,4 +24,7 @@
     <!-- Call UI in background -->
     <string name="bg_incall">Incoming call in background</string>
     <string name="bg_incall_summary">Keep incoming call UI in background when screen is on, show notification and play ringtone only</string>
+    <!-- Battery Saver -->
+    <string name="battery_mode">Battery saving mode</string>
+    <string name="battery_mode_label">Set network to 2G when device is locked</string>
 </resources>
