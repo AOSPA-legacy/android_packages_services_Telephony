@@ -225,6 +225,8 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String BUTTON_CHOOSE_REVERSE_LOOKUP_PROVIDER =
             "button_choose_reverse_lookup_provider";
 
+    private static final String BUTTON_SMART_DIALER_KEY = "button_smart_dialer";
+
     private Intent mContactListIntent;
 
     /** Event for Async voicemail change call */
@@ -338,6 +340,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private SipSharedPreferences mSipSharedPreferences;
     private CheckBoxPreference mEnableForwardLookup;
     private CheckBoxPreference mEnablePeopleLookup;
+    private CheckBoxPreference mSmartCall;
     private CheckBoxPreference mEnableReverseLookup;
     private ListPreference mChooseForwardLookupProvider;
     private ListPreference mChoosePeopleLookupProvider;
@@ -635,6 +638,10 @@ public class CallFeaturesSetting extends PreferenceActivity
                 // This should let the preference use default behavior in the xml.
                 return false;
             }
+        } else if (preference == mSmartCall){
+            Settings.System.putInt(getContentResolver(), Settings.System.SMART_PHONE_CALLER,
+                    mSmartCall.isChecked() ? 1 : 0);
+            return true;
         }
         return false;
     }
@@ -1727,6 +1734,10 @@ public class CallFeaturesSetting extends PreferenceActivity
 
         removeOptionalPrefs(prefSet);
         addOptionalPrefs(prefSet);
+
+        mSmartCall = (CheckBoxPreference) findPreference(BUTTON_SMART_DIALER_KEY);
+        mSmartCall.setChecked(Settings.System.getInt(getContentResolver(),
+                Settings.System.SMART_PHONE_CALLER, 0) != 0 ? true : false);
 
         onCreateLookupPrefs();
 
