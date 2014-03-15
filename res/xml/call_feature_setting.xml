@@ -296,4 +296,11 @@
           />
   </PreferenceScreen>
 
+    <CheckBoxPreference
+        android:key="button_smart_dialer"
+        android:title="@string/smart_dialer_title"
+        android:summary="@string/smart_dialer_summary"
+        android:persistent="false"
+        android:defaultValue="false" />
+
 </PreferenceScreen>
