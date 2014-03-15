@@ -169,6 +169,13 @@
       android:summary="@string/bg_incall_summary"/>
 
   <CheckBoxPreference
+            android:key="button_smart_phone_call"
+            android:title="@string/smart_phone_call_title"
+            android:summary="@string/smart_phone_call_summary"
+            android:persistent="false"
+            android:defaultValue="false" />
+
+  <CheckBoxPreference
       android:key="button_proximity_key"
       android:title="@string/proximity_mode_title"
       android:persistent="false"
