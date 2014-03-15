@@ -24,4 +24,8 @@
     <!-- Call UI in background -->
     <string name="bg_incall">Incoming call in background</string>
     <string name="bg_incall_summary">Keep incoming call UI in background when screen is on, show notification and play ringtone only</string>
+
+    <!-- Smart Phone Call -->
+    <string name="smart_phone_call_title">Smart phone call</string>
+    <string name="smart_phone_call_summary">Put on your ear, and this will automatically call current number in message or dialer</string>
 </resources>

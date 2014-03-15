@@ -224,6 +224,7 @@ public class CallFeaturesSetting extends PreferenceActivity
             "button_choose_people_lookup_provider";
     private static final String BUTTON_CHOOSE_REVERSE_LOOKUP_PROVIDER =
             "button_choose_reverse_lookup_provider";
+    private static final String BUTTON_SMART_PHONE_CALL_KEY = "button_smart_phone_call";
 
     private Intent mContactListIntent;
 
@@ -325,6 +326,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private CheckBoxPreference mButtonAutoRetry;
     private CheckBoxPreference mButtonHAC;
     private CheckBoxPreference mButtonCallUiInBackground;
+    private CheckBoxPreference mSmartCall;
     private ListPreference mButtonDTMF;
     private ListPreference mButtonTTY;
     private CheckBoxPreference mButtonNoiseSuppression;
@@ -635,6 +637,10 @@ public class CallFeaturesSetting extends PreferenceActivity
                 // This should let the preference use default behavior in the xml.
                 return false;
             }
+        } else if (preference == mSmartCall){
+            Settings.AOSPA.putInt(getContentResolver(), Settings.AOSPA.SMART_PHONE_CALLER,
+                    mSmartCall.isChecked() ? 1 : 0);
+            return true;
         }
         return false;
     }
@@ -1729,6 +1735,10 @@ public class CallFeaturesSetting extends PreferenceActivity
         addOptionalPrefs(prefSet);
 
         onCreateLookupPrefs();
+
+        mSmartCall = (CheckBoxPreference) findPreference(BUTTON_SMART_PHONE_CALL_KEY);
+        mSmartCall.setChecked(Settings.AOSPA.getInt(getContentResolver(),
+                Settings.AOSPA.SMART_PHONE_CALLER, 0) != 0 ? true : false);
 
         // create intent to bring up contact list
         mContactListIntent = new Intent(Intent.ACTION_GET_CONTENT);
