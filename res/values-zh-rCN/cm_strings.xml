@@ -54,4 +54,15 @@
     <string name="phone_number_summary">设定电话号码</string>
     <string name="noise_suppression_title">噪音抑制</string>
     <string name="noise_suppression_summary">启用噪音抑制</string>
+    <string name="number_lookup">号码查询</string>
+    <string name="enable_forward_lookup_title">附近号码</string>
+    <string name="enable_forward_lookup_summary">搜索附近地点的号码</string>
+    <string name="enable_people_lookup_title">人脉号码</string>
+    <string name="enable_people_lookup_summary">搜索人脉在线的结果</string>
+    <string name="enable_reverse_lookup_title">未知号码</string>
+    <string name="enable_reverse_lookup_summary">来电时查询未知号码的人或地点的信息</string>
+    <string name="choose_lookup_providers">选择查询源</string>
+    <string name="choose_forward_lookup_provider_title">选择附近号码查询源</string>
+    <string name="choose_people_lookup_provider_title">选择人脉号码查询源</string>
+    <string name="choose_reverse_lookup_provider_title">选择未知号码查询源</string>
 </resources>
