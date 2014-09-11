@@ -708,7 +708,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
+        <!-- BroadcastReceiver for receiving Intents from Notification mechanism -->
         <receiver android:name="PhoneGlobals$NotificationBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.android.phone.ACTION_HANG_UP_ONGOING_CALL" />
@@ -731,6 +731,46 @@
             android:label="@string/set_subscription"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+    <activity android:name="CallBarring" android:label="@string/call_barring"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:theme="@style/SettingsLight">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+        </intent-filter>
+    </activity>
+
+
+        <activity android:name="EmergencyCallList"
+                android:label="@string/emergency_call_list_title">
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="CdmaCallForwardOptions"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/labelCF" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="UserPLMNListPreference"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="UPLMNEditor"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
