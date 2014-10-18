@@ -94,11 +94,11 @@ public class SelectSubscription extends  TabActivity {
         for (int i = 0; i < numPhones; i++) {
             String operatorName = tm.getSimOperatorName(i);
             String label;
-            if (tm.getSimState(i) == SIM_STATE_ABSENT || tm.getSimState(i) != SIM_STATE_READY ||	97
-                    operatorName == null || operatorName.length() == 0) {	98
-                label = getString(R.string.multi_sim_entry_format_no_carrier, i + 1);	99
-            } else {	100
-                label = getString(R.string.multi_sim_entry_format, operatorName, i + 1);	101
+            if (tm.getSimState(i) == SIM_STATE_ABSENT || tm.getSimState(i) != SIM_STATE_READY ||
+                    operatorName == null || operatorName.length() == 0) {
+                label = getString(R.string.multi_sim_entry_format_no_carrier, i + 1);
+            } else {
+                label = getString(R.string.multi_sim_entry_format, operatorName, i + 1);
             }
             subscriptionPref = tabHost.newTabSpec(label);
             subscriptionPref.setIndicator(label);
