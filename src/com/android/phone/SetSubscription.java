@@ -52,8 +52,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.telephony.MSimTelephonyManager;
 import static android.telephony.TelephonyManager.SIM_STATE_ABSENT;
-import static android.telephony.TelephonyManager.SIM_STATE_READY;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
@@ -68,13 +66,13 @@ import com.codeaurora.telephony.msim.SubscriptionManager;
 /**
  * Displays a dialer like interface to Set the Subscriptions.
  */
-public class SetSubscription extends PreferenceActivity implements
+public class SetSubscription extends PreferenceActivity implements View.OnClickListener,
        DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
 
     private static final String TAG = "SetSubscription";
     public static final int SUBSCRIPTION_INDEX_INVALID = 99999;
 
-    private PreferenceScreen mPreferenceScreen;
+    private TextView mOkButton, mCancelButton;
     CheckBoxPreference subArray[];
     private boolean subErr = false;
     private SubscriptionData[] mCardSubscrInfo;
@@ -119,7 +117,12 @@ public class SetSubscription extends PreferenceActivity implements
             }
 
             addPreferencesFromResource(R.xml.set_subscription_pref);
-            mPreferenceScreen = getPreferenceScreen();
+            setContentView(R.layout.set_subscription_pref_layout);
+
+            mOkButton = (TextView) findViewById(R.id.ok);
+            mOkButton.setOnClickListener(this);
+            mCancelButton = (TextView) findViewById(R.id.cancel);
+            mCancelButton.setOnClickListener(this);
 
             // To store the selected subscriptions
             // index 0 for sub0 and index 1 for sub1
@@ -224,8 +227,11 @@ public class SetSubscription extends PreferenceActivity implements
     }
 
     private void updateCheckBoxes() {
+
+        PreferenceScreen prefParent = (PreferenceScreen) getPreferenceScreen()
+                                             .findPreference(PREF_PARENT_KEY);
         for (int i = 0; i < mCardSubscrInfo.length; i++) {
-            PreferenceCategory subGroup = (PreferenceCategory) mPreferenceScreen
+            PreferenceCategory subGroup = (PreferenceCategory) prefParent
                    .findPreference("sub_group_" + i);
             if (subGroup != null) {
                 int count = subGroup.getPreferenceCount();
@@ -256,7 +262,7 @@ public class SetSubscription extends PreferenceActivity implements
 
                     Log.d(TAG, "updateCheckBoxes: key = " + key);
 
-                    PreferenceCategory subGroup = (PreferenceCategory) mPreferenceScreen
+                    PreferenceCategory subGroup = (PreferenceCategory) prefParent
                            .findPreference("sub_group_" + mCurrentSelSub.subscription[i].slotId);
                     if (subGroup != null) {
                         CheckBoxPreference checkBoxPref =
@@ -272,6 +278,9 @@ public class SetSubscription extends PreferenceActivity implements
 
     /** add radio buttons to the group */
     private void populateList() {
+        PreferenceScreen prefParent = (PreferenceScreen) getPreferenceScreen().
+                findPreference(PREF_PARENT_KEY);
+
         Log.d(TAG, "populateList:  mCardSubscrInfo.length = " + mCardSubscrInfo.length);
 
         int k = 0;
@@ -281,20 +290,16 @@ public class SetSubscription extends PreferenceActivity implements
                 int i = 0;
 
                 MSimTelephonyManager tm = MSimTelephonyManager.getDefault();
-                String operatorName = tm.getSimOperatorName(k);
-                String subGroupTitle;
-                if (tm.getSimState(k) == SIM_STATE_ABSENT || tm.getSimState(k) != SIM_STATE_READY ||
-                        operatorName == null || operatorName.length() == 0) {
-                    subGroupTitle = getString(R.string.multi_sim_entry_format_no_carrier, k + 1);
-                } else {
-                    subGroupTitle = getString(R.string.multi_sim_entry_format, operatorName, k + 1);
-                }
+                String operatorName = tm.getSimState(k) != SIM_STATE_ABSENT
+                    ? tm.getNetworkOperatorName(k) : getString(R.string.sub_no_sim);
+                String subGroupTitle = getString(R.string.multi_sim_entry_format,
+                    operatorName, k + 1);
 
                 // Create a subgroup for the apps in each card
                 PreferenceCategory subGroup = new PreferenceCategory(this);
                 subGroup.setKey("sub_group_" + k);
                 subGroup.setTitle(subGroupTitle);
-                mPreferenceScreen.addPreference(subGroup);
+                prefParent.addPreference(subGroup);
 
                 // Add each element as a CheckBoxPreference to the group
                 for (Subscription sub : cardSub.subscription) {
@@ -333,10 +338,18 @@ public class SetSubscription extends PreferenceActivity implements
             } else {
                 subArray[slotIndex] = null;
             }
-            setSubscription();
             return true;
         }
     };
+
+    // for View.OnClickListener
+    public void onClick(View v) {
+        if (v == mOkButton) {
+            setSubscription();
+        } else if (v == mCancelButton) {
+            finish();
+        }
+    }
 
     private void setSubscription() {
         Log.d(TAG, "setSubscription");
@@ -517,15 +530,17 @@ public class SetSubscription extends PreferenceActivity implements
                     break;
                 case EVENT_SIM_STATE_CHANGED:
                     Log.d(TAG, "EVENT_SIM_STATE_CHANGED");
+                    PreferenceScreen prefParent = (PreferenceScreen) getPreferenceScreen()
+                                             .findPreference(PREF_PARENT_KEY);
 
                     for (int i = 0; i < mCardSubscrInfo.length; i++) {
-                        PreferenceCategory subGroup = (PreferenceCategory) mPreferenceScreen
+                        PreferenceCategory subGroup = (PreferenceCategory) prefParent
                                  .findPreference("sub_group_" + i);
                         if (subGroup != null) {
                             subGroup.removeAll();
                         }
                     }
-                    mPreferenceScreen.removeAll();
+                    prefParent.removeAll();
                     populateList();
                     updateCheckBoxes();
                     break;
