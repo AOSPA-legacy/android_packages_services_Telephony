@@ -333,7 +333,7 @@ public class SetSubscription extends PreferenceActivity implements
             } else {
                 subArray[slotIndex] = null;
             }
-            setSubscription();
+	    setSubscription();
             return true;
         }
     };
