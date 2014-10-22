@@ -50,6 +50,7 @@ public class PhoneToggler extends BroadcastReceiver  {
     private static final String LOG_TAG = "PhoneToggler";
     private static final boolean DBG = true;
 
+    private Phone mPhone;
     private MyHandler mHandler;
 
     private Phone getPhone() {
