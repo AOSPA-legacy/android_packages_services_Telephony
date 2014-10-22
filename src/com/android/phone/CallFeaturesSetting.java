@@ -43,6 +43,7 @@ import android.os.AsyncResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.UserHandle;
 import android.os.Vibrator;
 import android.preference.CheckBoxPreference;
@@ -177,6 +178,7 @@ public class CallFeaturesSetting extends PreferenceActivity
 
     private static final String BUTTON_RINGTONE_KEY    = "button_ringtone_key";
     private static final String BUTTON_VIBRATE_ON_RING = "button_vibrate_on_ring";
+    private static final String PROX_AUTO_SPEAKER  = "prox_auto_speaker";
     private static final String BUTTON_PLAY_DTMF_TONE  = "button_play_dtmf_tone";
     private static final String BUTTON_DTMF_KEY        = "button_dtmf_settings";
     private static final String BUTTON_RETRY_KEY       = "button_auto_retry_key";
@@ -323,6 +325,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private ListPreference mIncomingCallStyle;
     /** Whether dialpad plays DTMF tone or not. */
     private CheckBoxPreference mPlayDtmfTone;
+    private CheckBoxPreference mProxSpeaker;
     private CheckBoxPreference mButtonAutoRetry;
     private CheckBoxPreference mButtonHAC;
     private CheckBoxPreference mButtonCallUiInBackground;
@@ -578,6 +581,9 @@ public class CallFeaturesSetting extends PreferenceActivity
         } else if (preference == mPlayDtmfTone) {
             Settings.System.putInt(getContentResolver(), Settings.System.DTMF_TONE_WHEN_DIALING,
                     mPlayDtmfTone.isChecked() ? 1 : 0);
+        } else if (preference == mProxSpeaker) {
+            Settings.System.putInt(getContentResolver(), Settings.System.PROXIMITY_AUTO_SPEAKER,
+                    mProxSpeaker.isChecked() ? 1 : 0);
         } else if (preference == mMwiNotification) {
             int mwiNotification = mMwiNotification.isChecked() ? 1 : 0;
             Settings.System.putInt(mPhone.getContext().getContentResolver(),
@@ -1646,6 +1652,7 @@ public class CallFeaturesSetting extends PreferenceActivity
         onCreateVoicemailPrefs(icicle);
         onCreateRingtonePrefs(prefSet);
 
+        mProxSpeaker = (CheckBoxPreference) findPreference(PROX_AUTO_SPEAKER);
         mPlayDtmfTone = (CheckBoxPreference) findPreference(BUTTON_PLAY_DTMF_TONE);
 
         mButtonDTMF = (ListPreference) findPreference(BUTTON_DTMF_KEY);
@@ -1687,6 +1694,17 @@ public class CallFeaturesSetting extends PreferenceActivity
         if (mButtonDTMF != null) {
             if (getResources().getBoolean(R.bool.dtmf_type_enabled)) {
                 mButtonDTMF.setOnPreferenceChangeListener(this);
+            }
+        }
+
+        if (mProxSpeaker != null) {
+            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+            if (pm.isWakeLockLevelSupported(
+                    PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+                mProxSpeaker.setChecked(Settings.System.getInt(contentResolver,
+                        Settings.System.PROXIMITY_AUTO_SPEAKER, 0) == 1);
+            } else {
+                prefSet.removePreference(mProxSpeaker);
             }
         }
 
